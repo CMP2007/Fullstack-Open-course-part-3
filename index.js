@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 
 
-const notes = [
+const peoples = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -26,9 +26,28 @@ const notes = [
 ]
 
 app.get('/api/persons', (request, response) => {    
-  response.json(notes)
+  response.json(peoples)
 })
 
+
+app.get('/info', (request, response)=>{
+    const date = new Date();
+    const format = {
+        weekday: 'short',
+        year: 'numeric', 
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        timeZone: 'America/Caracas',
+        timeZoneName: 'long'
+    }
+    const formatDate = date.toLocaleString('en-US', format);
+    const peoplesNum = peoples.length 
+    
+    response.send(`<h2>Phonebook has info for ${peoplesNum} people</h2> <p>${formatDate}</p>`)
+})
 
 
 const PORT = 3001
