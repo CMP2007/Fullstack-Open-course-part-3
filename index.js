@@ -63,6 +63,16 @@ app.delete('/api/persons/:id', (request, response) => {
   response.json(people)
 })
 
+app.use(express.json())
+
+app.post(`/api/persons`, (request, response) => {
+  const num = Math.random() * 1000
+  const id = Math.floor(num)
+  const person = request.body
+  const newPerson = {...person, id: id}
+  console.log(newPerson)  
+  response.json(newPerson)
+})
 
 
 
