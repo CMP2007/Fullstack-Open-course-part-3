@@ -63,14 +63,35 @@ app.delete('/api/persons/:id', (request, response) => {
   response.json(people)
 })
 
+
+
+
 app.use(express.json())
 
 app.post(`/api/persons`, (request, response) => {
   const num = Math.random() * 1000
   const id = Math.floor(num)
   const person = request.body
-  const newPerson = {...person, id: id}
-  console.log(newPerson)  
+
+console.log(person);
+
+  if (!person) {
+    return response.status(400).json({ 
+      error: 'content missing' 
+    })
+  }
+
+  const newPerson = {
+    "id": id,
+    "name": person.name,
+    "number": person.number
+  }
+
+  console.log(peoples);
+  
+  const peoplesAct = peoples.concat(newPerson)
+console.log(peoplesAct);
+
   response.json(newPerson)
 })
 
