@@ -65,20 +65,35 @@ app.delete('/api/persons/:id', (request, response) => {
 
 
 
-
 app.use(express.json())
+
 
 app.post(`/api/persons`, (request, response) => {
   const num = Math.random() * 1000
   const id = Math.floor(num)
   const person = request.body
-
-console.log(person);
+  const checkPerson = peoples.find(people => person.name === people.name)
 
   if (!person) {
     return response.status(400).json({ 
       error: 'content missing' 
     })
+  }
+  else if (!person.name || !person.number){
+    return response.status(400).json(
+      { 
+        error: 'The data is incomplete',
+        message: 'the required data was not provided'
+       }
+    )
+  }
+  else if (checkPerson) {
+    return response.status(422).json(
+      { 
+        error: 'name must be unique',
+        message: 'The person is already registered in the agenda'
+       }
+    )
   }
 
   const newPerson = {
@@ -87,15 +102,10 @@ console.log(person);
     "number": person.number
   }
 
-  console.log(peoples);
-  
   const peoplesAct = peoples.concat(newPerson)
-console.log(peoplesAct);
 
   response.json(newPerson)
 })
-
-
 
 const PORT = 3001
 app.listen(PORT, () => {
