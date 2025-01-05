@@ -1,4 +1,5 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 const peoples = [
@@ -64,8 +65,8 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 
-
 app.use(express.json())
+app.use(morgan('tiny'))
 
 
 app.post(`/api/persons`, (request, response) => {
