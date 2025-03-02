@@ -1,0 +1,1 @@
+The link to my practice hosted on Render is the following: https://fullstack-open-course-part-3-exercise.onrender.com
