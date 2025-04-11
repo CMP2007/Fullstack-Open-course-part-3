@@ -8,29 +8,6 @@ const Phone = require('./models/person')
 app.use(cors())
 app.use(express.static('build'))
 
-// const peoples = [
-//     { 
-//       "id": 1,
-//       "name": "Arto Hellas", 
-//       "number": "040-123456"
-//     },
-//     { 
-//       "id": 2,
-//       "name": "Ada Lovelace", 
-//       "number": "39-44-5323523"
-//     },
-//     { 
-//       "id": 3,
-//       "name": "Dan Abramov", 
-//       "number": "12-43-234345"
-//     }, 
-//     { 
-//       "id": 4,
-//       "name": "Mary Poppendieck", 
-//       "number": "39-23-6423122"
-//     }
-// ]
-
 app.get('/api/persons', (request, response) => {    
   Phone.find({}).then(phones => {
     response.json(phones)
@@ -56,10 +33,16 @@ app.get('/info', (request, response)=>{
     response.send(`<h2>Phonebook has info for ${peoplesNum} people</h2> <p>${formatDate}</p>`)
 })
 
-app.get('/api/persons/:id', (request,response)=>{
-    Phone.findById(request.params.id).then(phone => {
-      response.json(phone)
+app.get('/api/persons/:id', (request,response, next)=>{
+    Phone.findById(request.params.id)
+    .then(phone => {
+      if (phone) {
+        response.json(phone)
+      } else {
+        response.status(404).end()
+      }
     })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -104,6 +87,26 @@ app.post(`/api/persons`, (request, response) => {
     response.json(savedPhone)
   })
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+// controlador de solicitudes con endpoint desconocido
+app.use(unknownEndpoint)
+
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+// controlador de solicitudes que resulten en errores (se diferencia por tener 4 argumentos)
+app.use(errorHandler)
+
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
