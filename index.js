@@ -6,7 +6,7 @@ const cors = require('cors')
 const Phone = require('./models/person')
 
 app.use(cors())
-app.use(express.static('dist'))
+app.use(express.static('build'))
 
 // const peoples = [
 //     { 
@@ -62,10 +62,12 @@ app.get('/api/persons/:id', (request,response)=>{
     })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const people = peoples.filter(people => people.id !== id)
-  response.json(people)
+app.delete('/api/persons/:id', (request, response, next) => {
+  Phone.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 
