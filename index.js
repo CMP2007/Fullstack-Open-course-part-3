@@ -14,6 +14,7 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
+
 app.get('/info', (request, response)=>{
     const date = new Date();
     const format = {
@@ -28,22 +29,26 @@ app.get('/info', (request, response)=>{
         timeZoneName: 'long'
     }
     const formatDate = date.toLocaleString('en-US', format);
-    const peoplesNum = peoples.length 
-    
-    response.send(`<h2>Phonebook has info for ${peoplesNum} people</h2> <p>${formatDate}</p>`)
+    Phone.find({})
+      .then(phones => {
+        response.send(`<h2>Phonebook has info for ${phones.length} people</h2> <p>${formatDate}</p>`)
+      })
+      .catch(error => next(error))
 })
+
 
 app.get('/api/persons/:id', (request,response, next)=>{
     Phone.findById(request.params.id)
-    .then(phone => {
-      if (phone) {
-        response.json(phone)
-      } else {
-        response.status(404).end()
-      }
+      .then(phone => {
+        if (phone) {
+          response.json(phone)
+        } else {
+          response.status(404).end()
+        }
     })
     .catch(error => next(error))
 })
+
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Phone.findByIdAndDelete(request.params.id)
@@ -69,6 +74,7 @@ morgan.format('personalized', function (tokens, req, res) {
 });
 
 app.use(morgan('personalized'));
+
 
 app.post(`/api/persons`, (request, response) => {
 
@@ -104,7 +110,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-
+ 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
