@@ -76,13 +76,9 @@ morgan.format('personalized', function (tokens, req, res) {
 app.use(morgan('personalized'));
 
 
-app.post(`/api/persons`, (request, response) => {
+app.post(`/api/persons`, (request, response, next) => {
 
   const body = request.body  
-
-  if (body === undefined) {
-    return response.status(400).json({ error: 'content missing' })
-  }
 
   const phone = new Phone({
     name: body.name,
@@ -92,11 +88,12 @@ app.post(`/api/persons`, (request, response) => {
   phone.save().then(savedPhone => {
     response.json(savedPhone)
   })
+  .catch(error => next(error))
 })
 
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const body = request.body
+    const body = request.body
 
   const phoneChange = {
     name: body.name,
@@ -123,7 +120,10 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  }  
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
 
   next(error)
 }
