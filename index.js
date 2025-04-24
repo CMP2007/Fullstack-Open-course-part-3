@@ -6,7 +6,7 @@ const cors = require('cors')
 const Phone = require('./models/person')
 
 app.use(cors())
-app.use(express.static('build'))
+app.use(express.static('dist'))
 
 app.get('/api/persons', (request, response) => {    
   Phone.find({}).then(phones => {
@@ -100,7 +100,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number,
   }
 
-  Phone.findByIdAndUpdate(request.params.id, phoneChange, { new: true })
+  Phone.findByIdAndUpdate(request.params.id, phoneChange, { new: true, runValidators: true })
     .then(updatedPhone => {
       response.json(updatedPhone)
     })

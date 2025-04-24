@@ -23,7 +23,17 @@ const phoneSchema = new mongoose.Schema({
     minLength: 3,
     required: true
   },
-  number: String,
+  number: {
+    type: String,
+    minLength: 8,
+    required: true,
+    validate: {
+      validator: function(v) {
+        return /\d{2}-\d{7}|\d{3}-\d{8}/.test(v);
+      },
+      message: props => `${props.value} is not a valid phone number! (Accepted formats: XX-XXXXXXX or XXX-XXXXXXXX)`
+    },
+  }
 })
 
 phoneSchema.set('toJSON', {
