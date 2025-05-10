@@ -8,7 +8,7 @@ This is a solution to the exercises in Part 3 (third) of the Fullstack Open cour
     - [chapter a (exercises 3.1 to 3.8)]
     - [chapter b (exercises 3.9 to 3.11)]
     - [chapter c (exercises 3.12 to 3.18)]
-    - [chapter d (exercises 3.19 to 2.20)]
+    - [chapter d (exercises 3.19 to 2.21)]
 - [Overview](#overview)
 - [Links](#inks)
 - [My Process](#my-process)
